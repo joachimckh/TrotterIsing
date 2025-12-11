@@ -1,10 +1,5 @@
-////#include <pybind11/pybind11.h>
-#include <vector>
 #include <iostream>
 #include <fstream>
-#include <Eigen/Dense>
-#include <unsupported/Eigen/KroneckerProduct>
-#include <unsupported/Eigen/MatrixFunctions>
 #include "ising.hpp"
 
 

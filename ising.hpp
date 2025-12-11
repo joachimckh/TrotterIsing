@@ -1,17 +1,13 @@
+#pragma once
+
+#include <vector>
+
 #include <Eigen/Dense>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 
 
 namespace ising {
-
-//  constexpr int nqubits = 6;
-//constexpr double t= 40.0;
-//constexpr double M = 200;
-//constexpr auto delta = t/ M;
-//
-//constexpr float g = 1.0;
-// const float dimension = std::pow(2, nqubits);
 
 Eigen::MatrixXcd kron_n(const std::vector<Eigen::MatrixXcd> &ops) {
   Eigen::MatrixXcd out = ops[0];
