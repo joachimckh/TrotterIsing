@@ -9,6 +9,11 @@
 
 namespace ising {
 
+const Eigen::Matrix2cd I = (Eigen::Matrix2cd() << 1., 0., 0., 1.).finished();
+const Eigen::Matrix2cd X = (Eigen::Matrix2cd() << 0., 1., 1., 0.).finished();
+const Eigen::Matrix2cd Z = (Eigen::Matrix2cd() << 1., 0., 0., -1.).finished();
+
+
 Eigen::MatrixXcd kron_n(const std::vector<Eigen::MatrixXcd> &ops) {
   Eigen::MatrixXcd out = ops[0];
   for (size_t i = 1; i < ops.size(); ++i)
@@ -54,6 +59,7 @@ Eigen::MatrixXcd trotter1st(const Eigen::MatrixXcd &H1,
   auto U2 = (std::complex<double>(0.0, -1.0) * H2 * delta).exp();
   return U2 * U1;
 }
+// what about second trotter? we just modify the above, to take n Us and return their product
 
 double magnetization_z(const Eigen::MatrixXcd &state,
                          const int nqubits,

@@ -43,3 +43,6 @@
 *.png
 *.pdf
 *.txt
+figures/
+
+.DS_Store

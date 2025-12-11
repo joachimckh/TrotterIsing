@@ -39,34 +39,29 @@ ax.annotate(
   fontsize=mSize
 )
 
-plt.tight_layout()
-#### plot 2
-
-error = data[:,0] - data[:,1]
+#### plot 2 Error
+error = np.abs(data[:,0] - data[:,1])
 f2 = plt.figure(figsize=(8,6))
 ax2 = plt.gca()
 
-ax2.plot(x, error, 'o-',markersize=3, color="black", label="Error")
-ax2.legend(loc = "lower left", prop={'size': mSize}, frameon=False)
+ax2.plot(x, error, 'o-',markersize=3, color="black", label=r"$M_\mathrm{Exact} - M_\mathrm{Trotter 1st order}$")
+ax2.legend(loc = "upper left", prop={'size': mSize}, frameon=False)
 ax2.set_ylabel(r"Error", fontsize=mSize, labelpad=2, loc='top')
 
-
-
-
-#### plot 3
+#### plot 3 Fidelity
 f3 = plt.figure(figsize=(8,6))
 ax3 = plt.gca()
-ax3.plot(x, data[:,2], 'o-',markersize=3, color="black", label="Fidelity")
+ax3.plot(x, data[:,2], 'o-',markersize=3, color="black", label=r"Trotter 1st order")
 ax3.set_ylabel(r"Fidelity", fontsize=mSize, labelpad=2, loc='top')
+ax3.legend(loc = "upper right", prop={'size': mSize}, frameon=False)
 ax3.set_ylim(0,1)
-
 
 axs = [ax, ax2, ax3]
 for a in axs:
   a.tick_params(direction='in', top=True, right=True)
   a.grid(alpha=0.2)
-  a.set_xlabel("t", fontsize=mSize, loc ='right')
+  a.set_xlabel("t", fontsize=mSize, loc ='right', labelpad=2)
   a.set_xlim(0, t)
-f.savefig("ising_trotter.png")
-f2.savefig("ising_trotter_error.png")
-f3.savefig("fidelity.png")
+f.savefig("figures/ising_trotter.png", bbox_inches='tight')
+f2.savefig("figures/ising_trotter_error.png", bbox_inches='tight')
+f3.savefig("figures/fidelity.png", bbox_inches='tight')

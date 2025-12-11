@@ -31,18 +31,6 @@ int main(int argc, char** argv) {
 
 
   using namespace ising;
-  Eigen::Matrix2cd I;
-  I << 1, 0,
-       0, 1;
-
-  Eigen::Matrix2cd X;
-  X << 0, 1,
-       1, 0;
-
-  Eigen::Matrix2cd Z;
-  Z << 1, 0,
-       0,-1;
-
 
   Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
