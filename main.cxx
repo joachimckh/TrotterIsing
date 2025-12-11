@@ -17,13 +17,15 @@ double params::delta = params::t / params::M;
 double params::g = 1.0;
    
 int main(int argc, char** argv) {
-
-  // in file params.txt read params::nqubits, M, t, g provided as arguments
-  if (argc < 1) {
-    std::cout << "Usage: " << argv[0] << "params.txt" << std::endl;
+  if (argc < 2) {
+    std::cout << "Usage: " << argv[0] << " " << "params.txt" << std::endl;
   }
   std::ifstream param_file(argv[1]);
-  param_file >> params::nqubits >> params::M >> params::t >> params::g;
+  std::string key;
+  param_file >> key >> params::nqubits;
+  param_file >> key >> params::M;
+  param_file >> key >> params::t;
+  param_file >> key >> params::g;
   params::delta = params::t / params::M;
   float dimension = std::pow(2, params::nqubits);
 
