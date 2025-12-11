@@ -67,6 +67,11 @@ double magnetization_z(const Eigen::MatrixXcd &state,
   return mz;
 }
 
+double fidelity(const Eigen::MatrixXcd &state1,
+                const Eigen::MatrixXcd &state2) {
+  return std::norm((state1.adjoint() * state2).value());
+};
+
 
 
 

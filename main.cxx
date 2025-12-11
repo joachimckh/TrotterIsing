@@ -74,6 +74,7 @@ int main(int argc, char** argv) {
 
   std::vector<double> y_exact{magnetization_z(state, params::nqubits, Z, I)};
   std::vector<double> y_trotter{magnetization_z(state, params::nqubits, Z, I)};
+  std::vector<double> v_fidelity{fidelity(state, stateT)};
 
   for (int step=0; step < params::M; ++step) {
     state = U_exact * state;
@@ -82,12 +83,14 @@ int main(int argc, char** argv) {
 
     stateT = U_trotter * stateT;
     y_trotter.push_back(magnetization_z(stateT, params::nqubits, Z, I));
+
+    v_fidelity.push_back(fidelity(state, stateT));
   }
 
 
   std::ofstream f("magnetization.txt");
   for (size_t i = 0; i < y_exact.size(); ++i)
-    f << y_exact[i] << " " << y_trotter[i] << std::endl;
+    f << y_exact[i] << " " << y_trotter[i] << " " << v_fidelity[i] << std::endl;
 
 
 
