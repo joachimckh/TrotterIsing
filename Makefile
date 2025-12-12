@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -O3 -I ~/Eigen/eigen-5.0.0
+CXXFLAGS := -O3 -I ~/Eigen/eigen-5.0.0 -std=c++20
 TARGET := calc.o
 DATA:= magnetization.txt
 

@@ -31,7 +31,6 @@ ax.legend(loc = "upper right", prop={'size': mSize}, frameon=False)
 
 ax.set_ylabel(r"Magnetization", fontsize=mSize, labelpad=2, loc='top')
 
-# newline in annotate with f'' string ? 
 ax.annotate(
   f"$n_\\mathrm{{qubits}}={nqubits}$\n$g={g}$\n$\\delta={delta}$",
   xy=(0.02, 0.1),

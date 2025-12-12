@@ -6,26 +6,24 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 
-
 namespace ising {
+using mat2 = Eigen::Matrix2cd;
+using matcd = Eigen::MatrixXcd;
 
-const Eigen::Matrix2cd I = (Eigen::Matrix2cd() << 1., 0., 0., 1.).finished();
-const Eigen::Matrix2cd X = (Eigen::Matrix2cd() << 0., 1., 1., 0.).finished();
-const Eigen::Matrix2cd Z = (Eigen::Matrix2cd() << 1., 0., 0., -1.).finished();
+const auto I = (mat2() << 1., 0., 0., 1.).finished();
+const auto X = (mat2() << 0., 1., 1., 0.).finished();
+const auto Z = (mat2() << 1., 0., 0., -1.).finished();
 
-
-Eigen::MatrixXcd kron_n(const std::vector<Eigen::MatrixXcd> &ops) {
-  Eigen::MatrixXcd out = ops[0];
+matcd kron_n(const std::vector<matcd> &ops) {
+  matcd out = ops[0];
   for (size_t i = 1; i < ops.size(); ++i)
     out = Eigen::kroneckerProduct(out, ops[i]).eval();
   return out;
 }
 
-Eigen::MatrixXcd single_site_op(const Eigen::MatrixXcd &pauli,
-                                int site,
-                                int nqubits,
-                                const Eigen::MatrixXcd &I1) {
-  std::vector<Eigen::MatrixXcd> ops;
+matcd single_site_op(const matcd &pauli, int site, int nqubits,
+                     const matcd &I1) {
+  std::vector<matcd> ops;
   ops.reserve(nqubits);
   for (int i = 0; i < nqubits; ++i) {
     if (i == site)
@@ -36,11 +34,9 @@ Eigen::MatrixXcd single_site_op(const Eigen::MatrixXcd &pauli,
   return kron_n(ops);
 }
 
-Eigen::MatrixXcd zz_op(const int site,
-                       const int nqubits,
-                       const Eigen::MatrixXcd &Z,
-                       const Eigen::MatrixXcd &I1) {
-  std::vector<Eigen::MatrixXcd> ops;
+matcd zz_op(const int site, const int nqubits, const matcd &Z,
+            const matcd &I1) {
+  std::vector<matcd> ops;
   ops.reserve(nqubits);
   for (int i = 0; i < nqubits; ++i) {
     if (i == site || i == (site + 1) % nqubits)
@@ -51,36 +47,26 @@ Eigen::MatrixXcd zz_op(const int site,
   return kron_n(ops);
 }
 
-
-Eigen::MatrixXcd trotter1st(const Eigen::MatrixXcd &H1,
-                             const Eigen::MatrixXcd &H2,
-                             const double delta) {
+matcd trotter1st(const matcd &H1, const matcd &H2, const double delta) {
   auto U1 = (std::complex<double>(0.0, -1.0) * H1 * delta).exp();
   auto U2 = (std::complex<double>(0.0, -1.0) * H2 * delta).exp();
   return U2 * U1;
 }
-// what about second trotter? we just modify the above, to take n Us and return their product
+// what about second trotter? we just modify the above, to take n Us and return
+// their product i think
 
-double magnetization_z(const Eigen::MatrixXcd &state,
-                         const int nqubits,
-                         const Eigen::MatrixXcd &Z,
-                         const Eigen::MatrixXcd &I1) {
+double magnetization_z(const matcd &state, const int nqubits, const matcd &Z,
+                       const matcd &I1) {
   double mz = 0.0;
   for (int i = 0; i < nqubits; ++i) {
-    Eigen::MatrixXcd Z_i = single_site_op(Z, i, nqubits, I1);
+    matcd Z_i = single_site_op(Z, i, nqubits, I1);
     mz += (state.adjoint() * Z_i * state).value().real();
   }
   return mz;
 }
 
-double fidelity(const Eigen::MatrixXcd &state1,
-                const Eigen::MatrixXcd &state2) {
+double fidelity(const matcd &state1, const matcd &state2) {
   return std::norm((state1.adjoint() * state2).value());
 };
 
-
-
-
-}  // namespace ising
-
-
+} // namespace ising

@@ -1,22 +1,17 @@
-#include <iostream>
-#include <fstream>
 #include "ising.hpp"
-
+#include <fstream>
+#include <iostream>
 
 struct params {
-  static int nqubits;
-  static double M;
-  static double t;
-  static double delta;
-  static double g;
+  inline static int nqubits = 6;
+  inline static double M = 200.0;
+  inline static double t = 40.0;
+  inline static double g = 1.0;
+
+  static double delta() { return t / M; }
 };
-int params::nqubits = 6;
-double params::M = 200;
-double params::t = 40.0;
-double params::delta = params::t / params::M;
-double params::g = 1.0;
-   
-int main(int argc, char** argv) {
+
+int main(int argc, char **argv) {
   if (argc < 2) {
     std::cout << "Usage: " << argv[0] << " " << "params.txt" << std::endl;
   }
@@ -26,61 +21,62 @@ int main(int argc, char** argv) {
   param_file >> key >> params::M;
   param_file >> key >> params::t;
   param_file >> key >> params::g;
-  params::delta = params::t / params::M;
   float dimension = std::pow(2, params::nqubits);
 
-
-  using namespace ising;
+  using ising::I, ising::X, ising::Z;
 
   Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
-    H += zz_op(i, params::nqubits, Z, I);
+    H += ising::zz_op(i, params::nqubits, Z, I);
   }
   for (int i = 0; i < params::nqubits; ++i) {
-    H += params::g * single_site_op(X, i, params::nqubits, I);
+    H += params::g * ising::single_site_op(X, i, params::nqubits, I);
   }
   // eigenvalues and eigenvectors
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXcd> es(H);
-  Eigen::MatrixXcd U_exact = es.eigenvectors() *
-                             (es.eigenvalues().array() * (std::complex<double>(0.0, -1.0) * params::delta)).exp().matrix().asDiagonal() *
-                             es.eigenvectors().adjoint();
+  Eigen::MatrixXcd U_exact =
+      es.eigenvectors() *
+      (es.eigenvalues().array() *
+       (std::complex<double>(0.0, -1.0) * params::delta()))
+          .exp()
+          .matrix()
+          .asDiagonal() *
+      es.eigenvectors().adjoint();
 
-  
   Eigen::MatrixXcd H1 = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
-    H1 += zz_op(i, params::nqubits, Z, I);
+    H1 += ising::zz_op(i, params::nqubits, Z, I);
   }
   Eigen::MatrixXcd H2 = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
-    H2 += params::g * single_site_op(X, i, params::nqubits, I);
+    H2 += params::g * ising::single_site_op(X, i, params::nqubits, I);
   }
-  Eigen::MatrixXcd U_trotter = trotter1st(H1, H2, params::delta);
+  Eigen::MatrixXcd U_trotter = ising::trotter1st(H1, H2, params::delta());
 
   Eigen::VectorXcd state = Eigen::VectorXcd::Zero(dimension);
   state(0) = 1.0;
   auto stateT = state;
 
-  std::vector<double> y_exact{magnetization_z(state, params::nqubits, Z, I)};
-  std::vector<double> y_trotter{magnetization_z(state, params::nqubits, Z, I)};
-  std::vector<double> v_fidelity{fidelity(state, stateT)};
+  std::vector<double> y_exact{
+      ising::magnetization_z(state, params::nqubits, Z, I)};
+  std::vector<double> y_trotter{
+      ising::magnetization_z(state, params::nqubits, Z, I)};
+  std::vector<double> v_fidelity{ising::fidelity(state, stateT)};
 
-  for (int step=0; step < params::M; ++step) {
+  for (int step = 0; step < params::M; ++step) {
     state = U_exact * state;
-    double mz = magnetization_z(state, params::nqubits, Z, I);
+    double mz = ising::magnetization_z(state, params::nqubits, Z, I);
     y_exact.push_back(mz);
 
     stateT = U_trotter * stateT;
-    y_trotter.push_back(magnetization_z(stateT, params::nqubits, Z, I));
+    y_trotter.push_back(ising::magnetization_z(stateT, params::nqubits, Z, I));
 
-    v_fidelity.push_back(fidelity(state, stateT));
+    v_fidelity.push_back(ising::fidelity(state, stateT));
   }
-
 
   std::ofstream f("magnetization.txt");
   for (size_t i = 0; i < y_exact.size(); ++i)
     f << y_exact[i] << " " << y_trotter[i] << " " << v_fidelity[i] << std::endl;
-
-
 
   return 0;
 };
