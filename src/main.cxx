@@ -1,6 +1,7 @@
 #include "ising.hpp"
 #include <fstream>
 #include <iostream>
+#include <chrono>
 
 struct params {
   inline static int nqubits = 6;
@@ -24,6 +25,8 @@ int main(int argc, char **argv) {
   float dimension = std::pow(2, params::nqubits);
 
   using ising::I, ising::X, ising::Z;
+
+  auto start = std::chrono::high_resolution_clock::now();
 
   Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
@@ -73,6 +76,9 @@ int main(int argc, char **argv) {
 
     v_fidelity.push_back(ising::fidelity(state, stateT));
   }
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  std::cout << "Runtime : " << duration.count() << " ms" << std::endl;
 
   std::ofstream f("magnetization.txt");
   for (size_t i = 0; i < y_exact.size(); ++i)

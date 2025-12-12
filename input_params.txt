@@ -1,4 +1,4 @@
-nqubits 6
+nqubits 12
 M 200
 t 40.0
 g 1.0

@@ -18,4 +18,4 @@ Results are written to a .txt file, and can be plotted via
 python state.py
 ```
 
-The input parameters can be changed in the ising.params.txt file.
+The input parameters can be changed in the ising_params.txt file.

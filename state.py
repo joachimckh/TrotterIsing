@@ -43,9 +43,9 @@ error = np.abs(data[:,0] - data[:,1])
 f2 = plt.figure(figsize=(8,6))
 ax2 = plt.gca()
 
-ax2.plot(x, error, 'o-',markersize=3, color="black", label=r"$M_\mathrm{Exact} - M_\mathrm{Trotter 1st order}$")
+ax2.plot(x, error, 'o-',markersize=3, color="black", label=r"$|M_\mathrm{Exact} - M_\mathrm{Trotter}|$")
 ax2.legend(loc = "upper left", prop={'size': mSize}, frameon=False)
-ax2.set_ylabel(r"Error", fontsize=mSize, labelpad=2, loc='top')
+ax2.set_ylabel(r"$\varepsilon$", fontsize=mSize, labelpad=2, loc='top')
 
 #### plot 3 Fidelity
 f3 = plt.figure(figsize=(8,6))
@@ -58,9 +58,9 @@ ax3.set_ylim(0,1)
 axs = [ax, ax2, ax3]
 for a in axs:
   a.tick_params(direction='in', top=True, right=True)
-  a.grid(alpha=0.2)
+  a.grid(alpha=0.8)
   a.set_xlabel("t", fontsize=mSize, loc ='right', labelpad=2)
   a.set_xlim(0, t)
-f.savefig("figures/ising_trotter.png", bbox_inches='tight')
-f2.savefig("figures/ising_trotter_error.png", bbox_inches='tight')
-f3.savefig("figures/fidelity.png", bbox_inches='tight')
+f.savefig("figures/ising_trotter.pdf", bbox_inches='tight')
+f2.savefig("figures/ising_trotter_error.pdf", bbox_inches='tight')
+f3.savefig("figures/fidelity.pdf", bbox_inches='tight')
