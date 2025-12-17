@@ -32,11 +32,12 @@ ax.legend(loc = "upper right", prop={'size': mSize}, frameon=False)
 ax.set_ylabel(r"Magnetization", fontsize=mSize, labelpad=2, loc='top')
 
 ax.annotate(
-  f"$n_\\mathrm{{qubits}}={nqubits}$\n$g={g}$\n$\\delta={delta}$",
+    f"$n_\\mathrm{{qubits}}={nqubits}$\n$g={g}$\n$\\delta={delta:.3f}$",
   xy=(0.02, 0.1),
   xycoords='axes fraction',
   fontsize=mSize
 )
+ax.set_ylim(-12,12)
 
 #### plot 2 Error
 error = np.abs(data[:,0] - data[:,1])
@@ -52,8 +53,8 @@ f3 = plt.figure(figsize=(8,6))
 ax3 = plt.gca()
 ax3.plot(x, data[:,2], 'o-',markersize=3, color="black", label=r"Trotter 1st order")
 ax3.set_ylabel(r"Fidelity", fontsize=mSize, labelpad=2, loc='top')
-ax3.legend(loc = "upper right", prop={'size': mSize}, frameon=False)
-ax3.set_ylim(0,1)
+ax3.legend(loc = "lower left", prop={'size': mSize}, frameon=False)
+ax3.set_ylim(0.2,1)
 
 axs = [ax, ax2, ax3]
 for a in axs:

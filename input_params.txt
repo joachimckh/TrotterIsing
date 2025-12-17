@@ -1,4 +1,5 @@
-nqubits 12
-M 200
-t 40.0
+nqubits 8
+M 500
+t 80.0
 g 1.0
+J 1.0

@@ -50,10 +50,8 @@ matcd zz_op(const int site, const int nqubits, const matcd &Z,
 matcd trotter1st(const matcd &H1, const matcd &H2, const double delta) {
   auto U1 = (std::complex<double>(0.0, -1.0) * H1 * delta).exp();
   auto U2 = (std::complex<double>(0.0, -1.0) * H2 * delta).exp();
-  return U2 * U1;
+  return U1 * U2;
 }
-// what about second trotter? we just modify the above, to take n Us and return
-// their product i think
 
 double magnetization_z(const matcd &state, const int nqubits, const matcd &Z,
                        const matcd &I1) {

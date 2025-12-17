@@ -8,6 +8,7 @@ struct params {
   inline static double M = 200.0;
   inline static double t = 40.0;
   inline static double g = 1.0;
+  inline static double J = 1.0;
 
   static double delta() { return t / M; }
 };
@@ -22,6 +23,7 @@ int main(int argc, char **argv) {
   param_file >> key >> params::M;
   param_file >> key >> params::t;
   param_file >> key >> params::g;
+  param_file >> key >> params::J;
   float dimension = std::pow(2, params::nqubits);
 
   using ising::I, ising::X, ising::Z;
@@ -30,7 +32,7 @@ int main(int argc, char **argv) {
 
   Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
-    H += ising::zz_op(i, params::nqubits, Z, I);
+    H += -params::J * ising::zz_op(i, params::nqubits, Z, I);
   }
   for (int i = 0; i < params::nqubits; ++i) {
     H += params::g * ising::single_site_op(X, i, params::nqubits, I);
@@ -48,7 +50,7 @@ int main(int argc, char **argv) {
 
   Eigen::MatrixXcd H1 = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
-    H1 += ising::zz_op(i, params::nqubits, Z, I);
+    H1 += -params::J * ising::zz_op(i, params::nqubits, Z, I);
   }
   Eigen::MatrixXcd H2 = Eigen::MatrixXcd::Zero(dimension, dimension);
   for (int i = 0; i < params::nqubits; ++i) {
